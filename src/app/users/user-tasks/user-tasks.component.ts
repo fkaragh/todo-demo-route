@@ -1,6 +1,6 @@
 import { Component, inject, input } from '@angular/core';
 import { UsersService } from '../users.service';
-import { ActivatedRouteSnapshot, ResolveFn, RouterLink, RouterOutlet, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, RouterLink, RouterOutlet, RouterStateSnapshot } from '@angular/router';
 
 @Component({
   selector: 'app-user-tasks',
@@ -12,6 +12,16 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterLink, RouterOutlet, RouterStat
 export class UserTasksComponent {
   userName = input.required<string>();
   message = input.required<string>();
+  // //////////////// Another approach to get reach to the activated route data
+  // private activatedRoute = inject(ActivatedRoute);
+
+  // ngOnInit(){
+  //   this.activatedRoute.data.subscribe({
+  //     next: data => {
+  //       console.log(data);
+  //     } 
+  //   })
+  // }
 } 
 
 export const resolveUserName: ResolveFn<string> = (
@@ -24,4 +34,11 @@ export const resolveUserName: ResolveFn<string> = (
       (u) => u.id === activatedRoute.paramMap.get('userId')
     )?.name || '';
   return userName;
+}
+
+export const resolveTitle: ResolveFn<string> = (
+  activatedRoute,
+  routerState,
+) => {
+  return resolveUserName(activatedRoute, routerState) + '\'s tasks'
 }
